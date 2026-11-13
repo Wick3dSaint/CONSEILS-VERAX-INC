@@ -32,6 +32,9 @@ export default async function ContactPage({ params }) {
             {hero.title}
           </h1>
           <p className="hero__lead">{hero.lead}</p>
+          <p className="hero__link">
+            <MoreLink href={lp(hero.bookLink.href)}>{hero.bookLink.label}</MoreLink>
+          </p>
         </div>
       </section>
 

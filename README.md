@@ -4,7 +4,7 @@ Marketing website for **Conseils Verax Inc.**, a Canadian accounting and advisor
 *Verax* is Latin for *truthful*; the mark is a spirit level at rest: "On the level."
 
 Built with **Next.js 16 (App Router)**, **React 19** and JavaScript, styled with a single plain-CSS file
-(`app/globals.css`), in French and English. It has no Tailwind and no UI libraries. Its one extra dependency is `nodemailer`, which sends contact-form email through your own mailbox.
+(`app/globals.css`), in French and English. It has no Tailwind and no UI libraries. Its extra dependencies are `nodemailer` (sends email through your own mailbox) and `mysql2` (stores bookings in your Hostinger database).
 
 ## Running the site
 
@@ -51,6 +51,7 @@ visitors' browsers never contact Google. The build machine needs internet access
 | Logo mark (React component, colours as props) | `components/Logo.js` |
 | Animated spirit level | `components/Level.js`, keyframes in `app/globals.css` |
 | Language switcher | `components/LanguageSwitcher.js` |
+| Online booking (rules, holidays, storage, emails) | `lib/booking/`, page `app/[lang]/book`, widget `components/BookingWidget.js` |
 | Icons | `components/Icon.js` |
 | Favicon | `app/icon.svg` |
 
@@ -81,6 +82,31 @@ structure (so no text can go missing) and refreshes `TRANSLATIONS.md`.
 
 - French text the firm hasn't approved yet is wrapped in `pending('English', 'suggestion')` in
   `lib/content/fr.js`. The English shows on the French pages until then. The suggestions are never shown.
+
+## Online booking
+
+Visitors book a free 30-minute first consultation at `/fr/book` or `/en/book`. Every "Book a consultation"
+button points there.
+
+- **Availability rules** live in `lib/booking/config.js`: slot times (10:00, 10:30, 16:00, 16:30), weekdays
+  (Monday to Friday), notice (from tomorrow), how far ahead (4 weeks), and `extraClosedDates` for
+  vacations. All times are Eastern Time (Montréal), with daylight saving handled automatically.
+- **Québec public holidays** are closed automatically every year (`lib/booking/holidays.js`): New Year's
+  Day, Good Friday, Easter Monday, National Patriots' Day, Fête nationale, Canada Day, Labour Day,
+  Thanksgiving and Christmas.
+- **No double bookings:** the database allows only one active booking per slot, even if two people confirm
+  at the same instant. One upcoming booking per email address.
+- **Emails** (sent from the mailbox in `SMTP_USER`):
+  - the client gets a confirmation in their language, with a calendar invitation and a cancellation link;
+  - you get a notification with a calendar entry;
+  - on cancellation, both of you are notified and the calendar entry is withdrawn.
+- **Video calls:** the site doesn't create video links. Send the client the link yourself before the
+  meeting; the confirmation email tells them to expect it.
+- **Storage:** a MySQL database on Hostinger, read from the `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER` and
+  `DB_PASSWORD` environment variables (Hostinger sets these when the database is created). The
+  `bookings` table is created automatically. To see bookings, open the database in hPanel's phpMyAdmin.
+  Cancelled bookings keep their row with `active` empty.
+- If the database is unreachable, the page tells visitors to email or call instead.
 
 ## Pre-launch checklist
 
