@@ -169,11 +169,11 @@ log and nobody is notified.
       obligations. *Québec's privacy law (often called Law 25) may apply. Please confirm with a qualified
       adviser.*
 
-### 4. French version ✅ built, translations pending
+### 4. French version ✅ done
 
 - [x] French pages at `/fr/…`, language switcher, Québec visitors see French first.
-- [ ] Approve the remaining French items listed in `TRANSLATIONS.md`, then replace each `pending(…)` in
-      `lib/content/fr.js` with the approved text.
+- [x] All French items approved by the firm (`TRANSLATIONS.md` lists none pending). For new text, use
+      `pending('English', 'suggestion')` in `lib/content/fr.js` until it is approved.
 - [ ] Have a professional translator review the French copy. *A French version is very likely required for a
       Québec business under the Charter of the French language; please confirm the exact requirements with a
       qualified adviser.*
