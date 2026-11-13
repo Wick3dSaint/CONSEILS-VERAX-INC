@@ -1,5 +1,6 @@
 import { contactPage, services } from '@/lib/content';
 import { LIMITS, validateEnquiry } from '@/lib/validation';
+import { isMailConfigured, sendEnquiryEmail } from '@/lib/mailer';
 
 // Only accept the choices the form actually offers.
 const CLIENT_TYPES = new Set(contactPage.form.clientTypes);
@@ -45,25 +46,22 @@ export async function POST(request) {
     receivedAt: new Date().toISOString(),
   };
 
-  // Enquiries contain personal information: make sure your hosting logs are
-  // access-controlled and retained only as long as necessary.
-  console.info('[contact] New enquiry', JSON.stringify(enquiry));
-
-  // TODO: Connect an email service or CRM so enquiries reach a real inbox.
-  // Set CONTACT_WEBHOOK_URL in your environment (see .env.example), then forward
-  // the enquiry here, for example:
-  //
-  //   const url = process.env.CONTACT_WEBHOOK_URL;
-  //   if (url) {
-  //     const res = await fetch(url, {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify(enquiry),
-  //     });
-  //     if (!res.ok) return Response.json({ ok: false }, { status: 502 });
-  //   }
-  //
-  // Until this is done, enquiries are ONLY written to the server log above.
+  // Email the enquiry to the firm's mailbox (see lib/mailer.js for the settings).
+  if (isMailConfigured()) {
+    try {
+      await sendEnquiryEmail(enquiry);
+      // Keep personal details out of the server log once email delivery works.
+      console.info('[contact] Enquiry emailed', enquiry.receivedAt);
+    } catch (error) {
+      console.error('[contact] Email delivery failed:', error?.message ?? error);
+      // The visitor sees the failure message, which tells them to email the firm directly.
+      return Response.json({ ok: false, error: 'Delivery failed' }, { status: 502 });
+    }
+  } else {
+    // Email is not configured yet (SMTP_USER / SMTP_PASS missing): the server log is the
+    // only record. Enquiries contain personal information, so keep log access restricted.
+    console.warn('[contact] Email not configured; enquiry logged only:', JSON.stringify(enquiry));
+  }
 
   return Response.json({ ok: true });
 }

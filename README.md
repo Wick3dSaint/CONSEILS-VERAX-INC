@@ -4,7 +4,7 @@ Marketing website for **Conseils Verax Inc.**, a Canadian accounting and advisor
 *Verax* is Latin for *truthful*; the mark is a spirit level at rest: "On the level."
 
 Built with **Next.js 16 (App Router)**, **React 19** and JavaScript, styled with a single plain-CSS file
-(`app/globals.css`). It has no Tailwind, no UI libraries and no third-party services.
+(`app/globals.css`). It has no Tailwind and no UI libraries. Its one extra dependency is `nodemailer`, which sends contact-form email through your own mailbox.
 
 ## Running the site
 
@@ -41,7 +41,7 @@ visitors' browsers never contact Google. The build machine needs internet access
 | Global styles and design tokens (colours, radii, type scale) | `app/globals.css` (top of file) |
 | Pages | `app/page.js` (home), `app/services`, `app/approach`, `app/clients`, `app/contact` |
 | Contact form (browser side) | `components/ContactForm.js` |
-| Contact form endpoint | `app/api/contact/route.js` |
+| Contact form endpoint | `app/api/contact/route.js` (email sending: `lib/mailer.js`) |
 | Form validation, shared by the form and the endpoint | `lib/validation.js` |
 | Logo mark (React component, colours as props) | `components/Logo.js` |
 | Animated spirit level | `components/Level.js`, keyframes in `app/globals.css` |
@@ -91,20 +91,31 @@ grep -rn "CONFIRM" lib/content.js
 Also have someone at the firm read **every** service description and "What's included" list, so the site
 promises only what the firm delivers. The brand promise depends on it.
 
-### 3. Connect the contact form
+### 3. Turn on contact-form email
 
-Right now `POST /api/contact` validates each enquiry and **only writes it to the server log**. Nobody is
-notified. Before launch:
+The form emails each enquiry to your mailbox through Hostinger's mail server (`lib/mailer.js`). Email
+stays **off** until the mailbox credentials are set; until then enquiries are only written to the server
+log and nobody is notified.
 
-- [ ] Choose a delivery method (an email service, a CRM, or an automation webhook).
-- [ ] Set `CONTACT_WEBHOOK_URL` (see `.env.example`) in your hosting provider's environment settings, or in
-      `.env.local` for local testing. Never commit real secrets.
-- [ ] Finish the `TODO` in `app/api/contact/route.js`; a commented example is included.
-- [ ] Submit a test enquiry on the live site and confirm it arrives.
+- [ ] In hPanel, open **Websites → conseilsverax.ca → Node.js → Environment variables** and add:
+
+  | Key | Value |
+  | --- | --- |
+  | `SMTP_USER` | the sending mailbox, e.g. `jli@conseilsverax.ca` |
+  | `SMTP_PASS` | that mailbox's password |
+  | `CONTACT_TO_EMAIL` | *optional*: deliver to a different address (default: `SMTP_USER`) |
+
+  `SMTP_HOST` (default `smtp.hostinger.com`) and `SMTP_PORT` (default `465`, SSL; use `587` for
+  STARTTLS) only need setting if you use another mail provider. Never commit real values to Git.
+- [ ] Submit a test enquiry on the live site and confirm the email arrives. Pressing **Reply** answers
+      the visitor directly.
+- [ ] If the visitor sees "The message didn't go through", check the app's runtime logs in hPanel for
+      `[contact] Email delivery failed` (usually a wrong password).
 - [ ] Consider rate limiting the endpoint. A hidden "honeypot" field already filters out simple bots.
-- [ ] Enquiries contain personal information. Check how long your server logs keep them, and who can
-      read them, against your privacy obligations. *Québec's privacy law (often called Law 25) may apply.
-      Please confirm with a qualified adviser.*
+- [ ] Enquiries contain personal information. Once email works, the server log keeps only a timestamp.
+      Check how long your mailbox keeps enquiries, and who can read them, against your privacy
+      obligations. *Québec's privacy law (often called Law 25) may apply. Please confirm with a qualified
+      adviser.*
 
 ### 4. Add a French version
 
