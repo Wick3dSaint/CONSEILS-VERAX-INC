@@ -58,14 +58,14 @@ automatically.
 
 ## Pre-launch checklist
 
-### 1. Replace placeholders
+### 1. Replace placeholders ✅ done
 
 All four are in the `site` object at the top of `lib/content.js`:
 
-- [ ] `[YOUR EMAIL]`: footer, home page, contact sidebar, and the contact form's error message
-- [ ] `[YOUR PHONE]`: footer, home page, contact sidebar
-- [ ] `[YOUR HOURS]`: contact sidebar ("Office hours")
-- [ ] `[YOUR RESPONSE TIME]`: the contact form's success message and the "What happens next" card
+- [x] `[YOUR EMAIL]`: footer, home page, contact sidebar, and the contact form's error message
+- [x] `[YOUR PHONE]`: footer, home page, contact sidebar
+- [x] `[YOUR HOURS]`: contact sidebar ("Office hours")
+- [x] `[YOUR RESPONSE TIME]`: the contact form's success message and the "What happens next" card
 
 To confirm nothing is left, run this; it should print nothing:
 
@@ -73,14 +73,14 @@ To confirm nothing is left, run this; it should print nothing:
 grep -rn "\[YOUR" app components lib
 ```
 
-### 2. Verify the [CONFIRM] items
+### 2. Verify the [CONFIRM] items ✅ done (all three kept)
 
 These services are listed on the site but need the firm's confirmation. Delete the ` [CONFIRM]` marker
 once each one is verified, or remove the item if you don't offer it.
 
-- [ ] Tax Preparation: "Support with tax authority notices"
-- [ ] Tax Planning: "Owner remuneration planning"
-- [ ] Fractional Controller: "A regular review meeting with you"
+- [x] Tax Preparation: "Support with tax authority notices"
+- [x] Tax Planning: "Owner remuneration planning"
+- [x] Fractional Controller: "A regular review meeting with you"
 
 To check for any that remain:
 
