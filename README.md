@@ -4,7 +4,7 @@ Marketing website for **Conseils Verax Inc.**, a Canadian accounting and advisor
 *Verax* is Latin for *truthful*; the mark is a spirit level at rest: "On the level."
 
 Built with **Next.js 16 (App Router)**, **React 19** and JavaScript, styled with a single plain-CSS file
-(`app/globals.css`). It has no Tailwind and no UI libraries. Its one extra dependency is `nodemailer`, which sends contact-form email through your own mailbox.
+(`app/globals.css`), in French and English. It has no Tailwind and no UI libraries. Its one extra dependency is `nodemailer`, which sends contact-form email through your own mailbox.
 
 ## Running the site
 
@@ -37,30 +37,56 @@ visitors' browsers never contact Google. The build machine needs internet access
 
 | What | Where |
 | --- | --- |
-| **All copy** (text, placeholders, services, navigation, form messages) | `lib/content.js` |
+| **English copy** (all text, services, navigation, form messages) | `lib/content/en.js` |
+| **French copy** (same structure) | `lib/content/fr.js` |
+| French items awaiting the firm's translation | `TRANSLATIONS.md` (generated) |
+| Language helpers (URLs, metadata, dictionaries) | `lib/i18n.js` |
+| Language choice for visitors (cookie → Québec IP → browser → English) | `proxy.js` |
+| Québec IP ranges and lookup | `lib/geo/quebec-ranges.json`, `lib/geo/quebec.js` |
 | Global styles and design tokens (colours, radii, type scale) | `app/globals.css` (top of file) |
-| Pages | `app/page.js` (home), `app/services`, `app/approach`, `app/clients`, `app/contact` |
+| Pages (one file serves both languages) | `app/[lang]/page.js` (home), `app/[lang]/services`, `…/approach`, `…/clients`, `…/contact` |
 | Contact form (browser side) | `components/ContactForm.js` |
 | Contact form endpoint | `app/api/contact/route.js` (email sending: `lib/mailer.js`) |
 | Form validation, shared by the form and the endpoint | `lib/validation.js` |
 | Logo mark (React component, colours as props) | `components/Logo.js` |
 | Animated spirit level | `components/Level.js`, keyframes in `app/globals.css` |
+| Language switcher | `components/LanguageSwitcher.js` |
 | Icons | `components/Icon.js` |
 | Favicon | `app/icon.svg` |
-| Page titles and descriptions | the `metadata` export at the top of each `page.js` (text in `lib/content.js`) |
 
-To change any wording, edit `lib/content.js`; you don't need to touch the page files. Headlines with a grey
-second half are written as `{ lead, rest }`. The email, phone, hours and response time are set **once**
-in the `site` object at the top of the file and reused everywhere.
+To change any wording, edit `lib/content/en.js` (English) or `lib/content/fr.js` (French); you don't need to
+touch the page files. Headlines with a grey second half are written as `{ lead, rest }`. The email and
+phone are set once in `en.js` and reused by both languages.
 
-Once you replace `[YOUR EMAIL]` and `[YOUR PHONE]`, they turn into clickable `mailto:` and `tel:` links
-automatically.
+Run `npm run i18n:check` after editing either file: it confirms the French file still matches the English
+structure (so no text can go missing) and refreshes `TRANSLATIONS.md`.
+
+## Languages
+
+- Every page exists at `/fr/…` and `/en/…`. The **English**/**Français** button in the header switches to
+  the same page in the other language and remembers the choice (a `lang` cookie, one year).
+- Addresses without a language (`/`, `/services`, old links) are redirected by `proxy.js`:
+  1. the visitor's saved choice, if any;
+  2. **French for visitors in Québec**, located by IP address;
+  3. otherwise their browser's preferred language, then English.
+- Québec detection uses DB-IP's free *IP to City Lite* database (CC BY 4.0). Only the Québec ranges are
+  kept, in `lib/geo/quebec-ranges.json`; visitor addresses are checked on our own server and never sent
+  anywhere. It is approximate: VPNs and some mobile networks can be placed in the wrong province. The license
+  requires the "IP Geolocation by DB-IP" link in the footer, so keep it.
+- **Refresh the Québec ranges about once a month** (DB-IP releases monthly), then commit and push:
+
+  ```bash
+  npm run geo:update
+  ```
+
+- French text the firm hasn't approved yet is wrapped in `pending('English', 'suggestion')` in
+  `lib/content/fr.js`. The English shows on the French pages until then. The suggestions are never shown.
 
 ## Pre-launch checklist
 
 ### 1. Replace placeholders ✅ done
 
-All four are in the `site` object at the top of `lib/content.js`:
+All four are in the `site` object at the top of `lib/content/en.js`:
 
 - [x] `[YOUR EMAIL]`: footer, home page, contact sidebar, and the contact form's error message
 - [x] `[YOUR PHONE]`: footer, home page, contact sidebar
@@ -85,7 +111,7 @@ once each one is verified, or remove the item if you don't offer it.
 To check for any that remain:
 
 ```bash
-grep -rn "CONFIRM" lib/content.js
+grep -rn "CONFIRM" lib/content
 ```
 
 Also have someone at the firm read **every** service description and "What's included" list, so the site
@@ -117,30 +143,26 @@ log and nobody is notified.
       obligations. *Québec's privacy law (often called Law 25) may apply. Please confirm with a qualified
       adviser.*
 
-### 4. Add a French version
+### 4. French version ✅ built, translations pending
 
-For a business based in Québec, a French version of the website is very likely required under the
-*Charter of the French language*. It is also what many clients will expect. *I'm not certain of the exact
-current requirements, so please confirm them with a qualified adviser.*
-
-Suggested approach:
-
-- [ ] Translate `lib/content.js` into a French copy (for example `lib/content.fr.js`). Every visible string
-      on the site, form messages included, lives there.
-- [ ] Add French routes, such as an `app/[lang]/` segment, or follow the internationalisation guide in
-      `node_modules/next/dist/docs/01-app/02-guides/`. Set `<html lang="fr-CA">` on French pages.
-- [ ] Add a language switcher to the header, and `alternates.languages` to each page's `metadata`.
-- [ ] Have a professional translator review the copy, including the brand line *"True to our word. True to
-      your numbers."*
+- [x] French pages at `/fr/…`, language switcher, Québec visitors see French first.
+- [ ] Approve the remaining French items listed in `TRANSLATIONS.md`, then replace each `pending(…)` in
+      `lib/content/fr.js` with the approved text.
+- [ ] Have a professional translator review the French copy. *A French version is very likely required for a
+      Québec business under the Charter of the French language; please confirm the exact requirements with a
+      qualified adviser.*
+- [ ] Optional: French web addresses (e.g. `/fr/approche` instead of `/fr/approach`). The addresses are
+      currently the same English words in both languages.
 
 ### 5. Before going live
 
-- [ ] Add your domain as `metadataBase` in `app/layout.js` (needed for social-share images and canonical
-      URLs), and consider adding `app/sitemap.js` and `app/robots.js`.
+- [x] Domain set as `metadataBase` (`SITE_URL` in `lib/i18n.js`); each page lists its French and English
+      versions for search engines. Consider adding `app/sitemap.js` and `app/robots.js`.
 - [ ] Optionally add a social-share image (`app/opengraph-image.png`).
 - [ ] Check the site on a real phone, and with a screen reader if possible.
 - [ ] Note: the © year in the footer is set when the site is built. Rebuild at least once a year, or after
       January 1.
+- [ ] Refresh the Québec IP ranges monthly: `npm run geo:update`, then commit and push.
 
 ## Design notes
 

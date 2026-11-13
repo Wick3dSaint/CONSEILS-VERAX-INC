@@ -1,8 +1,9 @@
 import Link from 'next/link';
-import { footer, services, site } from '@/lib/content';
+import { localePath } from '@/lib/i18n';
 import { EmailLink, PhoneLink } from './ContactDetails';
 
-export default function Footer() {
+export default function Footer({ dict, lang }) {
+  const { footer, services, site } = dict;
   // Rendered at build time for static pages; a rebuild updates the year.
   const year = new Date().getFullYear();
 
@@ -17,7 +18,7 @@ export default function Footer() {
             <ul className="footer-list">
               {services.map((s) => (
                 <li key={s.id}>
-                  <Link href={`/services#${s.id}`}>{s.shortLabel}</Link>
+                  <Link href={localePath(lang, `/services#${s.id}`)}>{s.shortLabel}</Link>
                 </li>
               ))}
             </ul>
@@ -30,7 +31,7 @@ export default function Footer() {
             <ul className="footer-list">
               {footer.firmLinks.map((l) => (
                 <li key={l.href}>
-                  <Link href={l.href}>{l.label}</Link>
+                  <Link href={localePath(lang, l.href)}>{l.label}</Link>
                 </li>
               ))}
             </ul>
@@ -57,6 +58,12 @@ export default function Footer() {
             © {year} {site.legalName} {footer.rights}
           </p>
           <p>{site.signoff}</p>
+          {/* Attribution required by the DB-IP Lite license (CC BY 4.0), used for language selection. */}
+          <p className="footer-attribution">
+            <a href="https://db-ip.com" lang="en">
+              {footer.geoAttribution}
+            </a>
+          </p>
         </div>
       </div>
     </footer>

@@ -1,12 +1,13 @@
-import { approach, markParts, ui } from '@/lib/content';
+import { getDictionary, localePath, pageMetadata } from '@/lib/i18n';
 import { Level } from '@/components/Level';
 import { LogoMark } from '@/components/Logo';
 import { Headline, PillLink, RichText } from '@/components/Text';
 
-export const metadata = {
-  title: approach.meta.title,
-  description: approach.meta.description,
-};
+export async function generateMetadata({ params }) {
+  const { lang } = await params;
+  const { approach } = getDictionary(lang);
+  return pageMetadata(lang, '/approach', { title: approach.meta.title, description: approach.meta.description });
+}
 
 const MINT = '#5fd3b3';
 const DIM = '#48484a';
@@ -23,7 +24,11 @@ function MarkPart({ part }) {
   );
 }
 
-export default function ApproachPage() {
+export default async function ApproachPage({ params }) {
+  const { lang } = await params;
+  const dict = getDictionary(lang);
+  const { approach, markParts, ui } = dict;
+  const lp = (path) => localePath(lang, path);
   const { hero, dictionary, level, commitments, steps, pledge } = approach;
 
   return (
@@ -139,7 +144,7 @@ export default function ApproachPage() {
             {pledge.eyebrow}
           </h2>
           <p className="pledge">{pledge.text}</p>
-          <PillLink href={pledge.cta.href}>{pledge.cta.label}</PillLink>
+          <PillLink href={lp(pledge.cta.href)}>{pledge.cta.label}</PillLink>
         </div>
       </section>
     </>

@@ -412,26 +412,63 @@ section[id],
   font-weight: 600;
 }
 
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 3px 11px;
+  border: 1px solid var(--field-border);
+  border-radius: var(--r-pill);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.lang-switch:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
 @media (max-width: 639px) {
   .header-cta {
     display: none;
   }
 }
 
-@media (max-width: 519px) {
+/* Narrower screens: logo, language and pill on the first row; the menu on its own row. */
+@media (max-width: 859px) {
   :root {
-    --header-h: 82px;
+    --header-h: 86px;
   }
 
   .header-inner {
+    gap: 4px 12px;
     padding-block: 6px;
   }
 
+  .lang-switch {
+    order: 1;
+    margin-left: auto;
+  }
+
+  .header-cta {
+    order: 2;
+  }
+
   .site-nav {
+    order: 3;
     flex-basis: 100%;
     margin-left: 0;
   }
 
+  .site-nav ul {
+    gap: 24px;
+  }
+}
+
+@media (max-width: 519px) {
   .site-nav ul {
     justify-content: space-between;
     gap: 8px;
@@ -494,6 +531,14 @@ section[id],
 
 .footer-bottom p {
   margin: 0;
+}
+
+.footer-attribution {
+  flex-basis: 100%;
+}
+
+.footer-attribution a {
+  color: var(--muted);
 }
 
 /* --------------------------------------------------------------------------
@@ -1243,6 +1288,10 @@ section[id],
   letter-spacing: -0.04em;
   text-wrap: balance;
   quotes: '“' '”';
+}
+
+:lang(fr) .pledge {
+  quotes: '«\00a0' '\00a0»';
 }
 
 .pledge::before {

@@ -1,13 +1,18 @@
-import { services, servicesPage } from '@/lib/content';
+import { getDictionary, localePath, pageMetadata } from '@/lib/i18n';
 import { Icon } from '@/components/Icon';
 import { Headline, PillLink } from '@/components/Text';
 
-export const metadata = {
-  title: servicesPage.meta.title,
-  description: servicesPage.meta.description,
-};
+export async function generateMetadata({ params }) {
+  const { lang } = await params;
+  const { servicesPage } = getDictionary(lang);
+  return pageMetadata(lang, '/services', { title: servicesPage.meta.title, description: servicesPage.meta.description });
+}
 
-export default function ServicesPage() {
+export default async function ServicesPage({ params }) {
+  const { lang } = await params;
+  const dict = getDictionary(lang);
+  const { services, servicesPage } = dict;
+  const lp = (path) => localePath(lang, path);
   const { hero, closing } = servicesPage;
 
   return (
@@ -26,7 +31,7 @@ export default function ServicesPage() {
         <ul>
           {services.map((s) => (
             <li key={s.id}>
-              <a href={`#${s.id}`} className="pill pill--outline">
+              <a href={lp(`#${s.id}`)} className="pill pill--outline">
                 {s.shortLabel}
               </a>
             </li>
@@ -54,7 +59,7 @@ export default function ServicesPage() {
                   {s.title}
                 </h2>
                 <p className="service-panel__body">{s.body}</p>
-                <PillLink href={`/contact?service=${s.id}`}>{s.cta}</PillLink>
+                <PillLink href={lp(`/contact?service=${s.id}`)}>{s.cta}</PillLink>
               </div>
 
               <div className="service-panel__aside">
@@ -85,7 +90,7 @@ export default function ServicesPage() {
             {closing.title}
           </h2>
           <p className="closing__text">{closing.text}</p>
-          <PillLink href={closing.cta.href}>{closing.cta.label}</PillLink>
+          <PillLink href={lp(closing.cta.href)}>{closing.cta.label}</PillLink>
         </div>
       </section>
     </>

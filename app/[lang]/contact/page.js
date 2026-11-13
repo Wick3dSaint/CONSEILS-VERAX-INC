@@ -1,21 +1,26 @@
-import { contactPage, services, site } from '@/lib/content';
+import { getDictionary, localePath, pageMetadata } from '@/lib/i18n';
 import ContactForm from '@/components/ContactForm';
 import { EmailLink, PhoneLink } from '@/components/ContactDetails';
 import { MoreLink } from '@/components/Text';
 
-export const metadata = {
-  title: contactPage.meta.title,
-  description: contactPage.meta.description,
-};
+export async function generateMetadata({ params }) {
+  const { lang } = await params;
+  const { contactPage } = getDictionary(lang);
+  return pageMetadata(lang, '/contact', { title: contactPage.meta.title, description: contactPage.meta.description });
+}
 
-// The five services plus "Not sure yet". `id` matches /contact?service=<id> links.
-const serviceOptions = [
-  ...services.map((s) => ({ id: s.id, value: s.title })),
-  { id: 'not-sure', value: contactPage.form.notSure },
-];
-
-export default function ContactPage() {
+export default async function ContactPage({ params }) {
+  const { lang } = await params;
+  const dict = getDictionary(lang);
+  const { contactPage, services, site } = dict;
+  const lp = (path) => localePath(lang, path);
   const { hero, form, sidebar } = contactPage;
+  // The five services plus "Not sure yet". `id` is what the form sends, and matches
+  // /contact?service=<id> links; the label is shown in the current language.
+  const serviceOptions = [
+    ...services.map((s) => ({ id: s.id, label: s.title })),
+    { id: 'not-sure', label: form.notSure },
+  ];
 
   return (
     <>
@@ -34,7 +39,7 @@ export default function ContactPage() {
         <div className="container contact-layout">
           {/* 2–3. Form */}
           <div className="contact-layout__form">
-            <ContactForm copy={form} serviceOptions={serviceOptions} />
+            <ContactForm copy={form} serviceOptions={serviceOptions} lang={lang} />
           </div>
 
           {/* 4. Sidebar */}
@@ -62,7 +67,7 @@ export default function ContactPage() {
             <div className="side-card side-card--grey">
               <h2 className="side-card__title">{sidebar.next.title}</h2>
               <p className="side-card__text">{sidebar.next.text}</p>
-              <MoreLink href={sidebar.next.link.href}>{sidebar.next.link.label}</MoreLink>
+              <MoreLink href={lp(sidebar.next.link.href)}>{sidebar.next.link.label}</MoreLink>
             </div>
           </aside>
         </div>

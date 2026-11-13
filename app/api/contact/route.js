@@ -1,10 +1,14 @@
-import { contactPage, services } from '@/lib/content';
+import en from '@/lib/content/en';
 import { LIMITS, validateEnquiry } from '@/lib/validation';
 import { isMailConfigured, sendEnquiryEmail } from '@/lib/mailer';
 
-// Only accept the choices the form actually offers.
-const CLIENT_TYPES = new Set(contactPage.form.clientTypes);
-const SERVICES = new Set([...services.map((s) => s.title), contactPage.form.notSure]);
+// The form sends ids (the same in every language). Enquiry emails use the English labels.
+const CLIENT_TYPES = new Map(en.contactPage.form.clientTypes.map((t) => [t.id, t.label]));
+const SERVICES = new Map([
+  ...en.services.map((s) => [s.id, s.title]),
+  ['not-sure', en.contactPage.form.notSure],
+]);
+const LANGUAGES = { fr: 'French', en: 'English' };
 
 // Generous upper bound for one enquiry, in bytes.
 const MAX_BODY_BYTES = 16 * 1024;
@@ -40,9 +44,10 @@ export async function POST(request) {
     firstName: values.firstName,
     lastName: values.lastName,
     email: values.email,
-    clientType: CLIENT_TYPES.has(values.clientType) ? values.clientType : '',
-    service: SERVICES.has(values.service) ? values.service : '',
+    clientType: CLIENT_TYPES.get(values.clientType) ?? '',
+    service: SERVICES.get(values.service) ?? '',
     message: values.message.slice(0, LIMITS.message),
+    language: LANGUAGES[body?.lang] ?? '',
     receivedAt: new Date().toISOString(),
   };
 

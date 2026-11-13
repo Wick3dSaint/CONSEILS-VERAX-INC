@@ -21,7 +21,7 @@ const EMPTY = {
  * - Submits JSON to POST /api/contact.
  * All copy arrives through props (from lib/content.js) so this bundle stays small.
  */
-export default function ContactForm({ copy, serviceOptions }) {
+export default function ContactForm({ copy, serviceOptions, lang }) {
   const [values, setValues] = useState(EMPTY);
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle'); // idle | sending | success | failure
@@ -51,7 +51,7 @@ export default function ContactForm({ copy, serviceOptions }) {
   useEffect(() => {
     const id = new URLSearchParams(window.location.search).get('service');
     const match = serviceOptions.find((o) => o.id === id);
-    if (match) setValues((v) => ({ ...v, service: match.value }));
+    if (match) setValues((v) => ({ ...v, service: match.id }));
   }, [serviceOptions]);
 
   function errorMessage(field) {
@@ -100,7 +100,7 @@ export default function ContactForm({ copy, serviceOptions }) {
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...clean, website: values.website }),
+        body: JSON.stringify({ ...clean, website: values.website, lang }),
       });
 
       if (response.ok) {
@@ -221,8 +221,8 @@ export default function ContactForm({ copy, serviceOptions }) {
           <select {...fieldProps('clientType')}>
             <option value="">{copy.selectPrompt}</option>
             {copy.clientTypes.map((type) => (
-              <option key={type} value={type}>
-                {type}
+              <option key={type.id} value={type.id}>
+                {type.label}
               </option>
             ))}
           </select>
@@ -232,8 +232,8 @@ export default function ContactForm({ copy, serviceOptions }) {
           <select {...fieldProps('service')}>
             <option value="">{copy.selectPrompt}</option>
             {serviceOptions.map((o) => (
-              <option key={o.id} value={o.value}>
-                {o.value}
+              <option key={o.id} value={o.id}>
+                {o.label}
               </option>
             ))}
           </select>

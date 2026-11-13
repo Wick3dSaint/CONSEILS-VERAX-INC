@@ -1,17 +1,21 @@
 import Link from 'next/link';
-import { clientSegments, home, services, site, ui } from '@/lib/content';
+import { getDictionary, localePath, pageMetadata } from '@/lib/i18n';
 import { Icon } from '@/components/Icon';
 import { Level } from '@/components/Level';
 import { Chevron, Headline, MoreLink } from '@/components/Text';
 import { EmailLink, PhoneLink } from '@/components/ContactDetails';
 
-export const metadata = {
-  // The root layout's title template does not apply to the root page, so give the full title.
-  title: { absolute: home.meta.title },
-  description: home.meta.description,
-};
+export async function generateMetadata({ params }) {
+  const { lang } = await params;
+  const { home } = getDictionary(lang);
+  return pageMetadata(lang, '/', { title: { absolute: home.meta.title }, description: home.meta.description });
+}
 
-export default function HomePage() {
+export default async function HomePage({ params }) {
+  const { lang } = await params;
+  const dict = getDictionary(lang);
+  const { clientSegments, home, services, site, ui } = dict;
+  const lp = (path) => localePath(lang, path);
   const { hero, feature, servicesBand, promise, serve, help } = home;
 
   return (
@@ -28,7 +32,7 @@ export default function HomePage() {
                 </span>
                 <p>
                   {row.text}{' '}
-                  <MoreLink href={row.link.href} className="more-link--strong">
+                  <MoreLink href={lp(row.link.href)} className="more-link--strong">
                     {row.link.label}
                   </MoreLink>
                 </p>
@@ -43,7 +47,7 @@ export default function HomePage() {
         <ul>
           {services.map((s) => (
             <li key={s.id}>
-              <Link href={`/services#${s.id}`} className="service-tile">
+              <Link href={lp(`/services#${s.id}`)} className="service-tile">
                 <span className="service-tile__icon">
                   <Icon name={s.icon} size={34} />
                 </span>
@@ -67,7 +71,7 @@ export default function HomePage() {
             </p>
             <Level size="small" label={ui.levelLabel} className="feature__level" />
             <p className="feature__caption">{feature.caption}</p>
-            <MoreLink href={feature.link.href}>{feature.link.label}</MoreLink>
+            <MoreLink href={lp(feature.link.href)}>{feature.link.label}</MoreLink>
           </div>
         </div>
       </section>
@@ -85,7 +89,7 @@ export default function HomePage() {
               </span>
               <p className="eyebrow">{s.eyebrow}</p>
               <h3 className="card__title">
-                <Link href={`/services#${s.id}`} className="stretched-link">
+                <Link href={lp(`/services#${s.id}`)} className="stretched-link">
                   {s.shortLabel}
                 </Link>
               </h3>
@@ -115,7 +119,7 @@ export default function HomePage() {
             ))}
           </ol>
           <p className="section-link">
-            <MoreLink href={promise.link.href}>{promise.link.label}</MoreLink>
+            <MoreLink href={lp(promise.link.href)}>{promise.link.label}</MoreLink>
           </p>
         </div>
       </section>
@@ -131,7 +135,7 @@ export default function HomePage() {
                   <Icon name={c.icon} size={28} />
                 </span>
                 <h3 className="tile__title">
-                  <Link href={`/clients#${c.id}`} className="stretched-link">
+                  <Link href={lp(`/clients#${c.id}`)} className="stretched-link">
                     {c.title}
                   </Link>
                 </h3>
@@ -154,7 +158,7 @@ export default function HomePage() {
               <p className="eyebrow eyebrow--mint">{help.consult.eyebrow}</p>
               <h3 className="help-card__title">{help.consult.title}</h3>
               <p className="help-card__text">{help.consult.text}</p>
-              <MoreLink href={help.consult.link.href}>{help.consult.link.label}</MoreLink>
+              <MoreLink href={lp(help.consult.link.href)}>{help.consult.link.label}</MoreLink>
             </div>
             <div className="help-card help-card--grey">
               <p className="eyebrow">{help.direct.eyebrow}</p>
@@ -168,7 +172,7 @@ export default function HomePage() {
                 </li>
                 <li>{site.area}</li>
               </ul>
-              <MoreLink href={help.direct.link.href}>{help.direct.link.label}</MoreLink>
+              <MoreLink href={lp(help.direct.link.href)}>{help.direct.link.label}</MoreLink>
             </div>
           </div>
         </div>

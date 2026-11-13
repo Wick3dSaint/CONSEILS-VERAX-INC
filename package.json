@@ -2,10 +2,13 @@
   "name": "conseils-verax",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "geo:update": "node scripts/update-geo.mjs",
+    "i18n:check": "node scripts/i18n-check.mjs"
   },
   "engines": {
     "node": ">=20.9.0"
