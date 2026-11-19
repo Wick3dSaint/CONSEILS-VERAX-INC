@@ -1,17 +1,20 @@
 import BookingWidget from '@/components/BookingWidget';
 import { MoreLink, Headline } from '@/components/Text';
 import { BOOKING } from '@/lib/booking/config';
-import { getDictionary, localePath, pageMetadata } from '@/lib/i18n';
+import { getContent, localePath, pageMetadata } from '@/lib/i18n';
+
+// Reads the admin portal's settings (services on/off, contact details) on every request.
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }) {
   const { lang } = await params;
-  const { bookingPage } = getDictionary(lang);
+  const { bookingPage } = await getContent(lang);
   return pageMetadata(lang, '/book', { title: bookingPage.meta.title, description: bookingPage.meta.description });
 }
 
 export default async function BookPage({ params }) {
   const { lang } = await params;
-  const { bookingPage, site } = getDictionary(lang);
+  const { bookingPage, site } = await getContent(lang);
   const { hero, contactAlt } = bookingPage;
 
   return (

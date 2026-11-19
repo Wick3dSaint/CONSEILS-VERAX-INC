@@ -1,17 +1,20 @@
-import { getDictionary, localePath, pageMetadata } from '@/lib/i18n';
+import { getContent, localePath, pageMetadata } from '@/lib/i18n';
 import ContactForm from '@/components/ContactForm';
 import { EmailLink, PhoneLink } from '@/components/ContactDetails';
 import { MoreLink } from '@/components/Text';
 
+// Reads the admin portal's settings (services on/off, contact details) on every request.
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata({ params }) {
   const { lang } = await params;
-  const { contactPage } = getDictionary(lang);
+  const { contactPage } = await getContent(lang);
   return pageMetadata(lang, '/contact', { title: contactPage.meta.title, description: contactPage.meta.description });
 }
 
 export default async function ContactPage({ params }) {
   const { lang } = await params;
-  const dict = getDictionary(lang);
+  const dict = await getContent(lang);
   const { contactPage, services, site } = dict;
   const lp = (path) => localePath(lang, path);
   const { hero, form, sidebar } = contactPage;

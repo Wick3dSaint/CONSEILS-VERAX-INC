@@ -1,16 +1,19 @@
-import { getDictionary, localePath, pageMetadata } from '@/lib/i18n';
+import { getContent, localePath, pageMetadata } from '@/lib/i18n';
 import { Icon } from '@/components/Icon';
 import { Headline, PillLink } from '@/components/Text';
 
+// Reads the admin portal's settings (services on/off, contact details) on every request.
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata({ params }) {
   const { lang } = await params;
-  const { servicesPage } = getDictionary(lang);
+  const { servicesPage } = await getContent(lang);
   return pageMetadata(lang, '/services', { title: servicesPage.meta.title, description: servicesPage.meta.description });
 }
 
 export default async function ServicesPage({ params }) {
   const { lang } = await params;
-  const dict = getDictionary(lang);
+  const dict = await getContent(lang);
   const { services, servicesPage } = dict;
   const lp = (path) => localePath(lang, path);
   const { hero, closing } = servicesPage;

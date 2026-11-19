@@ -53,6 +53,6 @@ export function proxy(request) {
 }
 
 export const config = {
-  // Everything except Next.js internals, the API and files with an extension (icon.svg, etc.).
-  matcher: ['/((?!_next/|api/|.*\\..*).*)'],
+  // Everything except Next.js internals, the API, the admin portal and files with an extension (icon.svg, etc.).
+  matcher: ['/((?!_next/|api/|admin(?:/|$)|.*\\..*).*)'],
 };

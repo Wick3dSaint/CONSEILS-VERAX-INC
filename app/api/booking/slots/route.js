@@ -1,6 +1,7 @@
 import { BOOKING } from '@/lib/booking/config';
 import { bookedStarts, isDbConfigured } from '@/lib/booking/db';
 import { candidateSlots } from '@/lib/booking/slots';
+import { getSettings } from '@/lib/settings';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,7 +13,7 @@ export async function GET() {
     return Response.json({ ok: false, error: 'unavailable' }, { status: 503, headers: noStore });
   }
   try {
-    const slots = candidateSlots();
+    const slots = candidateSlots((await getSettings()).booking);
     const taken = slots.length ? await bookedStarts(slots[0].start, slots.at(-1).start) : new Set();
     return Response.json(
       { ok: true, timeZone: BOOKING.timeZone, slots: slots.filter((s) => !taken.has(s.start)) },

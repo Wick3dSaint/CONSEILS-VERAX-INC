@@ -1,17 +1,20 @@
 import Link from 'next/link';
-import { getDictionary, localePath, pageMetadata, serviceMap } from '@/lib/i18n';
+import { getContent, localePath, pageMetadata, serviceMap } from '@/lib/i18n';
 import { Icon } from '@/components/Icon';
 import { Headline, PillLink } from '@/components/Text';
 
+// Reads the admin portal's settings (services on/off, contact details) on every request.
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata({ params }) {
   const { lang } = await params;
-  const { clientsPage } = getDictionary(lang);
+  const { clientsPage } = await getContent(lang);
   return pageMetadata(lang, '/clients', { title: clientsPage.meta.title, description: clientsPage.meta.description });
 }
 
 export default async function ClientsPage({ params }) {
   const { lang } = await params;
-  const dict = getDictionary(lang);
+  const dict = await getContent(lang);
   const { clientSegments, clientsPage } = dict;
   const serviceById = serviceMap(dict);
   const lp = (path) => localePath(lang, path);
@@ -39,6 +42,7 @@ export default async function ClientsPage({ params }) {
                 </span>
                 <h2 className="client-card__title">{c.title}</h2>
                 <p className="client-card__text">{c.text}</p>
+                {c.pairs.length > 0 && (
                 <div className="client-card__pairs">
                   <p className="client-card__pairs-label" id={`${c.id}-pairs`}>
                     {clientsPage.pairedLabel}
@@ -53,6 +57,7 @@ export default async function ClientsPage({ params }) {
                     ))}
                   </ul>
                 </div>
+                )}
               </li>
             ))}
           </ul>

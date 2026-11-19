@@ -1,16 +1,19 @@
 import CancelBooking from '@/components/CancelBooking';
-import { getDictionary, localePath } from '@/lib/i18n';
+import { getContent, localePath } from '@/lib/i18n';
+
+// Reads the admin portal's settings (services on/off, contact details) on every request.
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }) {
   const { lang } = await params;
-  const { bookingPage } = getDictionary(lang);
+  const { bookingPage } = await getContent(lang);
   // Personal links: keep them out of search engines.
   return { title: bookingPage.cancel.meta.title, robots: { index: false, follow: false } };
 }
 
 export default async function CancelPage({ params }) {
   const { lang } = await params;
-  const { bookingPage, site } = getDictionary(lang);
+  const { bookingPage, site } = await getContent(lang);
   return (
     <section className="hero" aria-labelledby="cancel-title">
       <div className="container booking-layout">

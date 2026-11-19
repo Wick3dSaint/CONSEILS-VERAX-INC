@@ -2,6 +2,7 @@ import { AlreadyBookedError, SlotTakenError, createBooking, isDbConfigured } fro
 import { notifyBooked } from '@/lib/booking/notify';
 import { findOfferedSlot } from '@/lib/booking/slots';
 import { clientIp, rateLimited } from '@/lib/rate-limit';
+import { getSettings } from '@/lib/settings';
 import { validateBooking } from '@/lib/validation';
 
 export const dynamic = 'force-dynamic';
@@ -32,7 +33,7 @@ export async function POST(request) {
   if (!isValid) return reply({ ok: false, errors }, 422);
 
   // Only slots the rules currently offer can be booked (not past, not today, not a holiday…).
-  const slot = findOfferedSlot(values.start);
+  const slot = findOfferedSlot(values.start, (await getSettings()).booking);
   if (!slot) return reply({ ok: false, error: 'slot_taken' }, 409);
 
   const lang = body?.lang === 'fr' ? 'fr' : 'en';

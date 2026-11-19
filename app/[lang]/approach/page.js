@@ -1,11 +1,14 @@
-import { getDictionary, localePath, pageMetadata } from '@/lib/i18n';
+import { getContent, localePath, pageMetadata } from '@/lib/i18n';
 import { Level } from '@/components/Level';
 import { LogoMark } from '@/components/Logo';
 import { Headline, PillLink, RichText } from '@/components/Text';
 
+// Reads the admin portal's settings (services on/off, contact details) on every request.
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata({ params }) {
   const { lang } = await params;
-  const { approach } = getDictionary(lang);
+  const { approach } = await getContent(lang);
   return pageMetadata(lang, '/approach', { title: approach.meta.title, description: approach.meta.description });
 }
 
@@ -26,7 +29,7 @@ function MarkPart({ part }) {
 
 export default async function ApproachPage({ params }) {
   const { lang } = await params;
-  const dict = getDictionary(lang);
+  const dict = await getContent(lang);
   const { approach, markParts, ui } = dict;
   const lp = (path) => localePath(lang, path);
   const { hero, dictionary, level, commitments, steps, pledge } = approach;

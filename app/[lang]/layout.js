@@ -2,7 +2,7 @@ import { Inter } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { SITE_URL, getDictionary, hasLocale, locales } from '@/lib/i18n';
+import { SITE_URL, getContent, hasLocale } from '@/lib/i18n';
 import '../globals.css';
 
 const inter = Inter({
@@ -12,15 +12,13 @@ const inter = Inter({
   variable: '--font-inter',
 });
 
-// Only /fr and /en exist; both are built ahead of time.
-export const dynamicParams = false;
-export function generateStaticParams() {
-  return locales.map((lang) => ({ lang }));
-}
+// Reads the admin portal's settings (services on/off, contact details) on every request.
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }) {
   const { lang } = await params;
-  const { site } = getDictionary(lang);
+  if (!hasLocale(lang)) return {};
+  const { site } = await getContent(lang);
   return {
     metadataBase: new URL(SITE_URL),
     title: { default: site.name, template: `%s · ${site.name}` },
@@ -42,7 +40,7 @@ export const viewport = {
 export default async function RootLayout({ children, params }) {
   const { lang } = await params;
   if (!hasLocale(lang)) notFound();
-  const dict = getDictionary(lang);
+  const dict = await getContent(lang);
 
   return (
     <html lang={dict.site.locale} className={inter.variable}>
