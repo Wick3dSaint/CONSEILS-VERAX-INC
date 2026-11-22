@@ -37,6 +37,14 @@ const PATHS = {
       <path d="M12 6.5v14" />
     </>
   ),
+  // Financial Reporting: a statement with a rising line
+  report: (
+    <>
+      <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+      <path d="M14 3v5h5" />
+      <path d="m8.5 16.5 2.5-2.5 2 1.5 3-3.5" />
+    </>
+  ),
   building: (
     <>
       <path d="M4.5 21V4.5A1.5 1.5 0 0 1 6 3h7.5A1.5 1.5 0 0 1 15 4.5V21" />
