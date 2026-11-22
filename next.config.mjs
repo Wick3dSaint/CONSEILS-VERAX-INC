@@ -2,6 +2,13 @@
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  // "Our approach" is now part of the About page.
+  async redirects() {
+    return [
+      { source: '/:lang(fr|en)/approach', destination: '/:lang/about', permanent: true },
+      { source: '/approach', destination: '/about', permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getContent, localePath, pageMetadata } from '@/lib/i18n';
+import { SHOW_CLIENTS, getContent, localePath, pageMetadata } from '@/lib/i18n';
 import { Icon } from '@/components/Icon';
 import { Level } from '@/components/Level';
 import { Chevron, Headline, MoreLink } from '@/components/Text';
@@ -127,30 +127,32 @@ export default async function HomePage({ params }) {
         </div>
       </section>
 
-      {/* 6. Who we serve */}
-      <section className="section section--flush-top" aria-labelledby="serve-title">
-        <div className="container">
-          <Headline id="serve-title" title={serve.title} />
-          <ul className="tile-grid tile-grid--3">
-            {clientSegments.map((c) => (
-              <li key={c.id} className="tile tile--link card-hover">
-                <span className="tile__icon">
-                  <Icon name={c.icon} size={28} />
-                </span>
-                <h3 className="tile__title">
-                  <Link href={lp(`/clients#${c.id}`)} className="stretched-link">
-                    {c.title}
-                  </Link>
-                </h3>
-                <span className="more-link tile__more" aria-hidden="true">
-                  {ui.learnMore}
-                  <Chevron />
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
+      {/* 6. Who we serve (switched off for now — see SHOW_CLIENTS in lib/i18n.js) */}
+      {SHOW_CLIENTS && (
+        <section className="section section--flush-top" aria-labelledby="serve-title">
+          <div className="container">
+            <Headline id="serve-title" title={serve.title} />
+            <ul className="tile-grid tile-grid--3">
+              {clientSegments.map((c) => (
+                <li key={c.id} className="tile tile--link card-hover">
+                  <span className="tile__icon">
+                    <Icon name={c.icon} size={28} />
+                  </span>
+                  <h3 className="tile__title">
+                    <Link href={lp(`/clients#${c.id}`)} className="stretched-link">
+                      {c.title}
+                    </Link>
+                  </h3>
+                  <span className="more-link tile__more" aria-hidden="true">
+                    {ui.learnMore}
+                    <Chevron />
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
 
       {/* 7. Help is here */}
       <section className="section section--flush-top" aria-labelledby="help-title">

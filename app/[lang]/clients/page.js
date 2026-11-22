@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { getContent, localePath, pageMetadata, serviceMap } from '@/lib/i18n';
+import { redirect } from 'next/navigation';
+import { SHOW_CLIENTS, getContent, localePath, pageMetadata, serviceMap } from '@/lib/i18n';
 import { Icon } from '@/components/Icon';
 import { Headline, PillLink } from '@/components/Text';
 
@@ -14,6 +15,8 @@ export async function generateMetadata({ params }) {
 
 export default async function ClientsPage({ params }) {
   const { lang } = await params;
+  // Switched off for now (see SHOW_CLIENTS): send visitors to Services instead (temporary redirect).
+  if (!SHOW_CLIENTS) redirect(localePath(lang, '/services'));
   const dict = await getContent(lang);
   const { clientSegments, clientsPage } = dict;
   const serviceById = serviceMap(dict);

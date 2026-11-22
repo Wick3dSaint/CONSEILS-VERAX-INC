@@ -44,7 +44,7 @@ visitors' browsers never contact Google. The build machine needs internet access
 | Language choice for visitors (cookie → Québec IP → browser → English) | `proxy.js` |
 | Québec IP ranges and lookup | `lib/geo/quebec-ranges.json`, `lib/geo/quebec.js` |
 | Global styles and design tokens (colours, radii, type scale) | `app/globals.css` (top of file) |
-| Pages (one file serves both languages) | `app/[lang]/page.js` (home), `app/[lang]/services`, `…/approach`, `…/clients`, `…/contact` |
+| Pages (one file serves both languages) | `app/[lang]/page.js` (home), `app/[lang]/services`, `…/about` (About us, including our approach; `/approach` redirects there), `…/clients` (switched off for now: set `SHOW_CLIENTS` in `lib/i18n.js` to `true` to bring back the page, the home page's “Who we serve” section and their links; `/clients` redirects to Services meanwhile), `…/contact` |
 | Contact form (browser side) | `components/ContactForm.js` |
 | Contact form endpoint | `app/api/contact/route.js` (email sending: `lib/mailer.js`) |
 | Form validation, shared by the form and the endpoint | `lib/validation.js` |
@@ -111,10 +111,12 @@ engines, English only).
 
 ## About page
 
-`/fr/about` and `/en/about` (content: `aboutPage` in `lib/content/en.js` and `fr.js`), linked from the menu and
-footer. Still to supply: a professional designation, if any ([CONFIRM] — `credentials`, shown after the title
-when filled in) and a photo (the logo stands in for now). Setting `aboutPage.draft` to `true` keeps the page out
-of search engines.
+`/fr/about` and `/en/about` — About us and our approach on one page: story, who you'll work with, the meaning of
+*verax*, "On the level", the six commitments, how we work and the pledge. Content: `aboutPage` (story, team) and
+`approach` (everything else) in `lib/content/en.js` and `fr.js`. The old `/approach` address redirects here
+permanently. Still to supply: a professional designation, if any ([CONFIRM] — `credentials`, shown after the
+title when filled in) and a photo (the logo stands in for now). Setting `aboutPage.draft` to `true` keeps the
+page out of search engines.
 
 ## Online booking
 
@@ -210,7 +212,7 @@ log and nobody is notified.
 - [ ] Have a professional translator review the French copy. *A French version is very likely required for a
       Québec business under the Charter of the French language; please confirm the exact requirements with a
       qualified adviser.*
-- [ ] Optional: French web addresses (e.g. `/fr/approche` instead of `/fr/approach`). The addresses are
+- [ ] Optional: French web addresses (e.g. `/fr/a-propos` instead of `/fr/about`). The addresses are
       currently the same English words in both languages.
 
 ### 5. Before going live
