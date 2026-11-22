@@ -112,7 +112,8 @@ engines, English only).
 ## About page (preliminary)
 
 `/fr/about` and `/en/about` (content: `aboutPage` in `lib/content/en.js` and `fr.js`). It has placeholders in
-[BRACKETS] for your story, name, title, professional designation and bio. While `aboutPage.draft` is `true`,
+[BRACKETS] for your title, professional designation and bio (the story is a first draft; the photo spot shows
+the logo until a photo is supplied). While `aboutPage.draft` is `true`,
 the page is kept out of the menu and search engines; once the placeholders are filled, set it to `false` and
 add an About link to the navigation.
 
