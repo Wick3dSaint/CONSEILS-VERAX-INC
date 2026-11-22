@@ -79,31 +79,29 @@ export default async function HomePage({ params }) {
         </div>
       </section>
 
-      {/* 4. Grey band with horizontal card scroller */}
+      {/* 4. Grey band: the services at a glance (names only; the details are on /services) */}
       <section className="band" aria-labelledby="services-band-title">
         <div className="container">
           <Headline id="services-band-title" title={servicesBand.title} />
+          <ul className="service-grid">
+            {services.map((s) => (
+              <li key={s.id} className="tile service-tile-home card-hover">
+                <span className="tile__icon">
+                  <Icon name={s.icon} size={28} />
+                </span>
+                <h3 className="tile__title">
+                  <Link href={lp(`/services#${s.id}`)} className="stretched-link">
+                    {s.title}
+                  </Link>
+                </h3>
+                <span className="more-link tile__more" aria-hidden="true">
+                  {ui.learnMore}
+                  <Chevron />
+                </span>
+              </li>
+            ))}
+          </ul>
         </div>
-        <ul className="scroller" aria-label={servicesBand.scrollerLabel}>
-          {services.map((s) => (
-            <li key={s.id} className="card card--scroll">
-              <span className="card__icon">
-                <Icon name={s.icon} size={28} />
-              </span>
-              <p className="eyebrow">{s.eyebrow}</p>
-              <h3 className="card__title">
-                <Link href={lp(`/services#${s.id}`)} className="stretched-link">
-                  {s.shortLabel}
-                </Link>
-              </h3>
-              <p className="card__text">{s.summary}</p>
-              <span className="more-link card__more" aria-hidden="true">
-                {ui.learnMore}
-                <Chevron />
-              </span>
-            </li>
-          ))}
-        </ul>
       </section>
 
       {/* 5. The Verax promise */}

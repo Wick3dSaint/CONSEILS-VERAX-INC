@@ -1165,6 +1165,51 @@ section[id],
   min-height: 210px;
 }
 
+/* Home page: the services at a glance — icon and name only. */
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: clamp(24px, 3vw, 36px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.service-tile-home {
+  background: var(--white);
+  padding: 28px;
+  min-height: 0;
+}
+
+.service-tile-home .tile__icon {
+  margin-bottom: 16px;
+}
+
+.service-tile-home .tile__title {
+  margin: 0;
+  font-size: clamp(1.1rem, 1.8vw, 1.3rem);
+}
+
+.service-tile-home .tile__more {
+  padding-top: 14px;
+  font-size: 14px;
+}
+
+@media (max-width: 739px) {
+  .service-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .service-tile-home {
+    padding: 20px;
+  }
+
+  .service-tile-home .tile__more {
+    display: none;
+  }
+}
+
 .card-hover {
   transition: transform 0.35s var(--ease-out);
 }

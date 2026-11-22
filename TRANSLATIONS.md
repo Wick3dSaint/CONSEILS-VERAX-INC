@@ -8,8 +8,8 @@ French (or "accept" to use the suggestion).
 To finish an item: in `lib/content/fr.js`, replace its whole `pending(…)` call with the approved
 French text, then run `npm run i18n:check` to update this list.
 
-1 item(s) pending (1 places on the site).
+0 item(s) pending (0 places on the site).
 
 | # | English (shown for now) | Suggested French (unverified) | Where it appears (lib/content/fr.js) |
 | --- | --- | --- | --- |
-| 1 | Implementing controls over company assets | Mise en place de contrôles sur les actifs de l’entreprise | Service: Fractional Controller ›.included #2 |
+

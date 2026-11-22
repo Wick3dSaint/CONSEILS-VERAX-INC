@@ -132,8 +132,10 @@ Visitors book a free 30-minute first consultation at `/fr/book` or `/en/book`, o
 page (same calendar). Every "Book a consultation" button points to the booking page.
 
 - **Availability** is edited in the admin portal (Availability tab): start times, days, notice, how far ahead,
-  closed days. Defaults (10:00, 10:30, 16:00, 16:30, Monday to Friday, from tomorrow, 4 weeks) are in
+  closed days. Defaults (10:00, 10:30, 11:00, 15:00, 16:00, 16:30, Monday to Friday, from tomorrow, 4 weeks) are in
   `lib/booking/config.js`. All times are Eastern Time (Montréal), with daylight saving handled automatically.
+  One-time changes to settings already saved in the portal go in `MIGRATIONS` in `lib/settings.js`; each runs
+  once (recorded in the `migrations` settings row), so later edits in the portal are never overridden.
 - **Québec public holidays** are closed automatically every year (`lib/booking/holidays.js`): New Year's
   Day, Good Friday, Easter Monday, National Patriots' Day, Fête nationale, Canada Day, Labour Day,
   Thanksgiving and Christmas.
