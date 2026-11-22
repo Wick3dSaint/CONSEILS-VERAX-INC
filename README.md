@@ -109,13 +109,12 @@ engines, English only).
   `[[ServiceList]]` and `[[Count]]` are filled in from the settings, and `{ one: …, other: … }` picks the
   singular or plural sentence (`buildContent` in `lib/i18n.js`).
 
-## About page (preliminary)
+## About page
 
-`/fr/about` and `/en/about` (content: `aboutPage` in `lib/content/en.js` and `fr.js`). It has placeholders in
-[BRACKETS] for your title and professional designation (the story is a first draft; the photo spot shows
-the logo until a photo is supplied). While `aboutPage.draft` is `true`,
-the page is kept out of the menu and search engines; once the placeholders are filled, set it to `false` and
-add an About link to the navigation.
+`/fr/about` and `/en/about` (content: `aboutPage` in `lib/content/en.js` and `fr.js`), linked from the menu and
+footer. Still to supply: a professional designation, if any ([CONFIRM] — `credentials`, shown after the title
+when filled in) and a photo (the logo stands in for now). Setting `aboutPage.draft` to `true` keeps the page out
+of search engines.
 
 ## Online booking
 

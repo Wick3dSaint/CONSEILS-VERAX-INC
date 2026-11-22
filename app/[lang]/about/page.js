@@ -57,7 +57,7 @@ export default async function AboutPage({ params }) {
                 <div>
                   <h3 className="about-person__name">{person.name}</h3>
                   <p className="about-person__role">
-                    {person.role} · {person.credentials}
+                    {[person.role, person.credentials].filter(Boolean).join(' · ')}
                   </p>
                   <p className="about-person__bio">{person.bio}</p>
                 </div>

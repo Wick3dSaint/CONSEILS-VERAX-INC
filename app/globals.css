@@ -401,6 +401,7 @@ section[id],
   font-size: 13px;
   letter-spacing: -0.005em;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .nav-link:hover {
@@ -472,6 +473,17 @@ section[id],
   .site-nav ul {
     justify-content: space-between;
     gap: 8px;
+  }
+}
+
+/* The smallest phones: keep all five menu items on one line. */
+@media (max-width: 359px) {
+  .site-nav ul {
+    gap: 4px;
+  }
+
+  .nav-link {
+    font-size: 12px;
   }
 }
 
