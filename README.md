@@ -81,8 +81,8 @@ structure (so no text can go missing) and refreshes `TRANSLATIONS.md`.
   npm run geo:update
   ```
 
-- **French pages have French addresses**: `/fr/a-propos`, `/fr/reserver`, `/fr/reserver/annuler`,
-  `/fr/calendrier-fiscal` (`/fr/services` and `/fr/contact` are already French). The map is `FR_PATHS` in
+- **French pages have French addresses**: `/fr/a-propos`, `/fr/reserver`, `/fr/reserver/annuler`
+  (`/fr/services` and `/fr/contact` are already French). The map is `FR_PATHS` in
   `lib/routes.js`; pages stay in `app/[lang]/<english-name>`, `next.config.mjs` serves each French address from
   its page and redirects the English one, and every link (menu, language switcher, emails) goes through
   `localePath()`. To add one, add a line to `FR_PATHS`.
@@ -165,15 +165,22 @@ Public pages are pre-built and served from a cache; each is rebuilt in the backg
 (`revalidatePath` in `app/api/admin/settings/route.js`), so changes still show immediately. Booking times are
 always live (fetched from `/api/booking/slots`). The cancel page stays fully dynamic.
 
-## Questions (FAQ) and tax dates
+## Questions (FAQ)
 
 - The Contact page ends with **Questions** (`contactPage.faq` in `lib/content/en.js` / `fr.js`). An answer
   with a `serviceId` is shown only while that service is switched on.
-- **Key tax dates** (`/en/tax-dates`, `/fr/calendrier-fiscal`): federal and Québec deadlines for the next
-  twelve months, plus a corporate year-end calculator. Dates are computed from their rules in
-  `lib/taxDates.js` (rules listed at the top of the file); weekend dates show the next business day. It is a
-  **draft** (`taxDatesPage.draft: true`): no menu link, not in the sitemap, hidden from search engines.
-  [CONFIRM] Once the firm has checked the rules, set `draft` to `false` and add a link where wanted.
+
+
+## To do (firm)
+
+- [ ] **Photo of Jeff** for the About page (the logo stands in until then); it could also go in the home
+      page's "Book a consultation" card.
+- [ ] **Google Search Console**: add a *Domain* property for `conseilsverax.ca` with a Google account; Google
+      gives a TXT record (`google-site-verification=…`) to add to the domain's DNS on Hostinger. Once verified,
+      submit `https://conseilsverax.ca/sitemap.xml`.
+- [ ] **Google Business Profile** (business.google.com): name, category (e.g. Accountant), phone, website,
+      hours; a service-area business can keep its address hidden. Google verifies the owner (method varies).
+      Check the professional order's rules before asking clients for reviews.
 
 ## Pre-launch checklist
 
@@ -253,8 +260,7 @@ log and nobody is notified.
       `app/[lang]/layout.js`; facts from the site only, no street address).
 - [x] Social-share image, generated per language (`app/[lang]/opengraph-image.js`, Inter from
       `assets/fonts`, SIL Open Font License).
-- [ ] Set up Google Search Console and submit `https://conseilsverax.ca/sitemap.xml`; optionally a Google
-      Business Profile.
+- [ ] Google Search Console and Business Profile — see **To do (firm)** above.
 - [ ] Check the site on a real phone, and with a screen reader if possible.
 - [ ] Note: the © year in the footer is set when the site is built. Rebuild at least once a year, or after
       January 1.

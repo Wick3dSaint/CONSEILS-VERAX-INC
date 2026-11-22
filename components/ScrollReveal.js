@@ -30,7 +30,6 @@ const UP = [
   '.step',
   '.contact-form',
   '.faq',
-  '.tax-date',
   '.about-person',
   '.about-story',
 ];
