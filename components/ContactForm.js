@@ -8,6 +8,7 @@ const EMPTY = {
   firstName: '',
   lastName: '',
   email: '',
+  preferredLanguage: '',
   clientType: '',
   service: '',
   message: '',
@@ -22,7 +23,9 @@ const EMPTY = {
  * All copy arrives through props (from lib/content.js) so this bundle stays small.
  */
 export default function ContactForm({ copy, serviceOptions, lang }) {
-  const [values, setValues] = useState(EMPTY);
+  // The preferred language starts as the language of the page.
+  const blank = { ...EMPTY, preferredLanguage: lang };
+  const [values, setValues] = useState(blank);
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle'); // idle | sending | success | failure
 
@@ -30,6 +33,7 @@ export default function ContactForm({ copy, serviceOptions, lang }) {
     firstName: useRef(null),
     lastName: useRef(null),
     email: useRef(null),
+    preferredLanguage: useRef(null),
     clientType: useRef(null),
     service: useRef(null),
     message: useRef(null),
@@ -125,7 +129,7 @@ export default function ContactForm({ copy, serviceOptions, lang }) {
   }
 
   function startOver() {
-    setValues(EMPTY);
+    setValues(blank);
     setErrors({});
     pendingFocus.current = 'firstName';
     setStatus('idle');
@@ -214,6 +218,30 @@ export default function ContactForm({ copy, serviceOptions, lang }) {
         />
         {renderError('email')}
       </div>
+
+      <fieldset
+        className="field meeting-type"
+        aria-invalid={errors.preferredLanguage ? 'true' : undefined}
+        aria-describedby={errors.preferredLanguage ? 'cf-preferredLanguage-error' : undefined}
+      >
+        <legend>{copy.fields.preferredLanguage}</legend>
+        <div className="meeting-type__options">
+          {copy.languages.map((option, i) => (
+            <label key={option.id} className="meeting-type__option" lang={option.id}>
+              <input
+                type="radio"
+                name="preferredLanguage"
+                value={option.id}
+                checked={values.preferredLanguage === option.id}
+                onChange={handleChange}
+                ref={i === 0 ? fieldRefs.preferredLanguage : undefined}
+              />
+              <span>{option.label}</span>
+            </label>
+          ))}
+        </div>
+        {renderError('preferredLanguage')}
+      </fieldset>
 
       <div className="field-row">
         <div className="field">

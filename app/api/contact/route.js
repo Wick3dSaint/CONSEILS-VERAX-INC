@@ -47,6 +47,7 @@ export async function POST(request) {
     clientType: CLIENT_TYPES.get(values.clientType) ?? '',
     service: SERVICES.get(values.service) ?? '',
     message: values.message.slice(0, LIMITS.message),
+    preferredLanguage: LANGUAGES[values.preferredLanguage] ?? '',
     language: LANGUAGES[body?.lang] ?? '',
     receivedAt: new Date().toISOString(),
   };
