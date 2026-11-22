@@ -109,6 +109,14 @@ engines, English only).
   `[[ServiceList]]` and `[[Count]]` are filled in from the settings, and `{ one: …, other: … }` picks the
   singular or plural sentence (`buildContent` in `lib/i18n.js`).
 
+## Services menu
+
+“Services” in the menu opens a dropdown of the services in three groups — Accounting, Taxation, Advisory
+(Comptabilité, Fiscalité, Conseil) — with “All services” at the foot. The groups and which services sit in each
+are `serviceGroups` in `lib/content/en.js` (French group names in `fr.js`). A service switched off in the admin
+portal drops out of the menu, and a group with nothing left is hidden. A new service must be added to a group to
+appear in the menu.
+
 ## About page
 
 `/fr/about` and `/en/about` — About us and our approach on one page: story, who you'll work with, the meaning of
