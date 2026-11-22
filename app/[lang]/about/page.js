@@ -3,8 +3,8 @@ import { LogoMark } from '@/components/Logo';
 import { Headline, PillLink, RichText } from '@/components/Text';
 import { getContent, localePath, pageMetadata } from '@/lib/i18n';
 
-// Reads the admin portal's settings on every request.
-export const dynamic = 'force-dynamic';
+// Pre-built and refreshed in the background at most once a minute; saving in the admin portal refreshes it at once.
+export const revalidate = 60;
 
 export async function generateMetadata({ params }) {
   const { lang } = await params;

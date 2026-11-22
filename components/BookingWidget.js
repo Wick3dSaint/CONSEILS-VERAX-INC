@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { BOOKING_FIELD_ORDER, LIMITS, validateBooking } from '@/lib/validation';
+import { longDateFormat } from '@/lib/dates';
 import { LogoMark } from './Logo';
 
 const EMPTY = { firstName: '', lastName: '', email: '', meetingType: '', phone: '', message: '', website: '' };
@@ -76,7 +77,7 @@ export default function BookingWidget({ copy, lang, locale, timeZone, homeHref }
   /* ---------- formatting ---------- */
   const fmt = useMemo(
     () => ({
-      longDay: new Intl.DateTimeFormat(locale, { timeZone: 'UTC', weekday: 'long', day: 'numeric', month: 'long' }),
+      longDay: longDateFormat(locale, { timeZone: 'UTC', weekday: 'long', day: 'numeric', month: 'long' }),
       month: new Intl.DateTimeFormat(locale, { timeZone: 'UTC', month: 'long', year: 'numeric' }),
       shortMonth: new Intl.DateTimeFormat(locale, { timeZone: 'UTC', month: 'short' }),
       weekday: new Intl.DateTimeFormat(locale, { timeZone: 'UTC', weekday: 'short' }),

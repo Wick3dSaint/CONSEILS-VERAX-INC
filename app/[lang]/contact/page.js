@@ -5,8 +5,8 @@ import BookingWidget from '@/components/BookingWidget';
 import { Headline, MoreLink } from '@/components/Text';
 import { BOOKING } from '@/lib/booking/config';
 
-// Reads the admin portal's settings (services on/off, contact details) on every request.
-export const dynamic = 'force-dynamic';
+// Pre-built and refreshed in the background at most once a minute; saving in the admin portal refreshes it at once.
+export const revalidate = 60;
 
 export async function generateMetadata({ params }) {
   const { lang } = await params;
@@ -19,8 +19,10 @@ export default async function ContactPage({ params }) {
   const dict = await getContent(lang);
   const { contactPage, bookingPage, services, site } = dict;
   const lp = (path) => localePath(lang, path);
-  const { hero, form, sidebar } = contactPage;
-  // The five services plus "Not sure yet". `id` is what the form sends, and matches
+  const { hero, form, sidebar, faq } = contactPage;
+  const on = new Set(services.map((s) => s.id));
+  const faqItems = faq.items.filter((item) => !item.serviceId || on.has(item.serviceId));
+  // Every service switched on, plus "Not sure yet". `id` is what the form sends, and matches
   // /contact?service=<id> links; the label is shown in the current language.
   const serviceOptions = [
     ...services.map((s) => ({ id: s.id, label: s.title })),
@@ -107,6 +109,21 @@ export default async function ContactPage({ params }) {
               <MoreLink href={lp(sidebar.next.link.href)}>{sidebar.next.link.label}</MoreLink>
             </div>
           </aside>
+        </div>
+      </section>
+
+      {/* 4. Questions (native disclosure: works without JavaScript and with any keyboard or screen reader) */}
+      <section id="faq" className="section section--flush-top" aria-labelledby="faq-heading">
+        <div className="container">
+          <Headline id="faq-heading" title={faq.title} />
+          <div className="faq">
+            {faqItems.map((item) => (
+              <details key={item.q} className="faq__item">
+                <summary className="faq__q">{item.q}</summary>
+                <p className="faq__a">{item.a}</p>
+              </details>
+            ))}
+          </div>
         </div>
       </section>
     </>

@@ -3,6 +3,13 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useId, useRef, useState } from 'react';
+import { internalPath } from '@/lib/routes';
+
+/** '/fr/a-propos' and '/fr/about' are the same page: compare internal paths. */
+function normalize(path) {
+  const m = path.match(/^\/(fr|en)(\/.*)?$/);
+  return m ? `/${m[1]}${internalPath(m[1], m[2] || '/')}` : path;
+}
 
 /**
  * The Services dropdown: a disclosure button and a panel of grouped links.
@@ -120,8 +127,11 @@ function ServicesMenu({ label, menu, current }) {
 }
 
 export default function NavLinks({ links, label, servicesMenu }) {
-  const pathname = usePathname() ?? '';
-  const isCurrent = (href) => pathname === href || pathname.startsWith(`${href}/`);
+  const pathname = normalize(usePathname() ?? '');
+  const isCurrent = (href) => {
+    const target = normalize(href);
+    return pathname === target || pathname.startsWith(`${target}/`);
+  };
 
   return (
     <nav aria-label={label} className="site-nav">

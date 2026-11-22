@@ -2,8 +2,8 @@ import { getContent, localePath, pageMetadata } from '@/lib/i18n';
 import { Icon } from '@/components/Icon';
 import { Headline, PillLink } from '@/components/Text';
 
-// Reads the admin portal's settings (services on/off, contact details) on every request.
-export const dynamic = 'force-dynamic';
+// Pre-built and refreshed in the background at most once a minute; saving in the admin portal refreshes it at once.
+export const revalidate = 60;
 
 export async function generateMetadata({ params }) {
   const { lang } = await params;

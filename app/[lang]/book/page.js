@@ -3,8 +3,8 @@ import { MoreLink, Headline } from '@/components/Text';
 import { BOOKING } from '@/lib/booking/config';
 import { getContent, localePath, pageMetadata } from '@/lib/i18n';
 
-// Reads the admin portal's settings (services on/off, contact details) on every request.
-export const dynamic = 'force-dynamic';
+// Pre-built and refreshed in the background at most once a minute; saving in the admin portal refreshes it at once.
+export const revalidate = 60;
 
 export async function generateMetadata({ params }) {
   const { lang } = await params;

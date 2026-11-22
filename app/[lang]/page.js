@@ -5,8 +5,8 @@ import { Level } from '@/components/Level';
 import { Chevron, Headline, MoreLink } from '@/components/Text';
 import { EmailLink, PhoneLink } from '@/components/ContactDetails';
 
-// Reads the admin portal's settings (services on/off, contact details) on every request.
-export const dynamic = 'force-dynamic';
+// Pre-built and refreshed in the background at most once a minute; saving in the admin portal refreshes it at once.
+export const revalidate = 60;
 
 export async function generateMetadata({ params }) {
   const { lang } = await params;
@@ -45,41 +45,7 @@ export default async function HomePage({ params }) {
         </div>
       </section>
 
-      {/* 2. Service icon row */}
-      <nav className="container service-row" aria-label={home.serviceRowLabel}>
-        <ul>
-          {services.map((s) => (
-            <li key={s.id}>
-              <Link href={lp(`/services#${s.id}`)} className="service-tile">
-                <span className="service-tile__icon">
-                  <Icon name={s.icon} size={34} />
-                </span>
-                <span className="service-tile__label">{s.shortLabel}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
-
-      {/* 3. Black feature panel */}
-      <section className="section section--tight" aria-labelledby="feature-title">
-        <div className="container">
-          <div className="panel panel--black on-dark feature">
-            <p className="eyebrow eyebrow--mint">{feature.label}</p>
-            <h2 id="feature-title" className="feature__word">
-              <span lang="la">{feature.word}</span> <em className="hl-rest">{feature.partOfSpeech}</em>
-            </h2>
-            <p className="feature__line">
-              <span className="hl-lead">{feature.line.lead}</span> <span className="hl-rest">{feature.line.rest}</span>
-            </p>
-            <Level size="small" label={ui.levelLabel} className="feature__level" />
-            <p className="feature__caption">{feature.caption}</p>
-            <MoreLink href={lp(feature.link.href)}>{feature.link.label}</MoreLink>
-          </div>
-        </div>
-      </section>
-
-      {/* 4. Grey band: the services at a glance (names only; the details are on /services) */}
+      {/* 2. Grey band: the services at a glance (names only; the details are on /services) */}
       <section className="band" aria-labelledby="services-band-title">
         <div className="container">
           <Headline id="services-band-title" title={servicesBand.title} />
@@ -104,7 +70,25 @@ export default async function HomePage({ params }) {
         </div>
       </section>
 
-      {/* 5. The Verax promise */}
+      {/* 3. Black feature panel */}
+      <section className="section section--tight" aria-labelledby="feature-title">
+        <div className="container">
+          <div className="panel panel--black on-dark feature">
+            <p className="eyebrow eyebrow--mint">{feature.label}</p>
+            <h2 id="feature-title" className="feature__word">
+              <span lang="la">{feature.word}</span> <em className="hl-rest">{feature.partOfSpeech}</em>
+            </h2>
+            <p className="feature__line">
+              <span className="hl-lead">{feature.line.lead}</span> <span className="hl-rest">{feature.line.rest}</span>
+            </p>
+            <Level size="small" label={ui.levelLabel} className="feature__level" />
+            <p className="feature__caption">{feature.caption}</p>
+            <MoreLink href={lp(feature.link.href)}>{feature.link.label}</MoreLink>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. The Verax promise */}
       <section className="section" aria-labelledby="promise-title">
         <div className="container">
           <Headline id="promise-title" title={promise.title} />
@@ -125,7 +109,7 @@ export default async function HomePage({ params }) {
         </div>
       </section>
 
-      {/* 6. Who we serve (switched off for now — see SHOW_CLIENTS in lib/i18n.js) */}
+      {/* 5. Who we serve (switched off for now — see SHOW_CLIENTS in lib/i18n.js) */}
       {SHOW_CLIENTS && (
         <section className="section section--flush-top" aria-labelledby="serve-title">
           <div className="container">
@@ -152,7 +136,7 @@ export default async function HomePage({ params }) {
         </section>
       )}
 
-      {/* 7. Help is here */}
+      {/* 6. Help is here */}
       <section className="section section--flush-top" aria-labelledby="help-title">
         <div className="container">
           <Headline id="help-title" title={help.title} />

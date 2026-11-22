@@ -81,6 +81,11 @@ structure (so no text can go missing) and refreshes `TRANSLATIONS.md`.
   npm run geo:update
   ```
 
+- **French pages have French addresses**: `/fr/a-propos`, `/fr/reserver`, `/fr/reserver/annuler`,
+  `/fr/calendrier-fiscal` (`/fr/services` and `/fr/contact` are already French). The map is `FR_PATHS` in
+  `lib/routes.js`; pages stay in `app/[lang]/<english-name>`, `next.config.mjs` serves each French address from
+  its page and redirects the English one, and every link (menu, language switcher, emails) goes through
+  `localePath()`. To add one, add a line to `FR_PATHS`.
 - French text the firm hasn't approved yet is wrapped in `pending('English', 'suggestion')` in
   `lib/content/fr.js`. The English shows on the French pages until then. The suggestions are never shown.
 
@@ -153,6 +158,23 @@ page (same calendar). Every "Book a consultation" button points to the booking p
   Cancelled bookings keep their row with `active` empty.
 - If the database is unreachable, the page tells visitors to email or call instead.
 
+## Speed (page caching)
+
+Public pages are pre-built and served from a cache; each is rebuilt in the background at most once a minute
+(`export const revalidate = 60`). **Saving in the admin portal rebuilds every page at once**
+(`revalidatePath` in `app/api/admin/settings/route.js`), so changes still show immediately. Booking times are
+always live (fetched from `/api/booking/slots`). The cancel page stays fully dynamic.
+
+## Questions (FAQ) and tax dates
+
+- The Contact page ends with **Questions** (`contactPage.faq` in `lib/content/en.js` / `fr.js`). An answer
+  with a `serviceId` is shown only while that service is switched on.
+- **Key tax dates** (`/en/tax-dates`, `/fr/calendrier-fiscal`): federal and Québec deadlines for the next
+  twelve months, plus a corporate year-end calculator. Dates are computed from their rules in
+  `lib/taxDates.js` (rules listed at the top of the file); weekend dates show the next business day. It is a
+  **draft** (`taxDatesPage.draft: true`): no menu link, not in the sitemap, hidden from search engines.
+  [CONFIRM] Once the firm has checked the rules, set `draft` to `false` and add a link where wanted.
+
 ## Pre-launch checklist
 
 ### 1. Replace placeholders ✅ done
@@ -222,14 +244,17 @@ log and nobody is notified.
 - [ ] Have a professional translator review the French copy. *A French version is very likely required for a
       Québec business under the Charter of the French language; please confirm the exact requirements with a
       qualified adviser.*
-- [ ] Optional: French web addresses (e.g. `/fr/a-propos` instead of `/fr/about`). The addresses are
-      currently the same English words in both languages.
+- [x] French web addresses (`/fr/a-propos`, `/fr/reserver`, …) — see Languages.
 
 ### 5. Before going live
 
-- [x] Domain set as `metadataBase` (`SITE_URL` in `lib/i18n.js`); each page lists its French and English
-      versions for search engines. Consider adding `app/sitemap.js` and `app/robots.js`.
-- [ ] Optionally add a social-share image (`app/opengraph-image.png`).
+- [x] Search engines: each page lists its French and English versions; `/sitemap.xml` (`app/sitemap.js`) and
+      `/robots.txt` (`app/robots.js`); the firm's details in schema.org form (`AccountingService`, in
+      `app/[lang]/layout.js`; facts from the site only, no street address).
+- [x] Social-share image, generated per language (`app/[lang]/opengraph-image.js`, Inter from
+      `assets/fonts`, SIL Open Font License).
+- [ ] Set up Google Search Console and submit `https://conseilsverax.ca/sitemap.xml`; optionally a Google
+      Business Profile.
 - [ ] Check the site on a real phone, and with a screen reader if possible.
 - [ ] Note: the © year in the footer is set when the site is built. Rebuild at least once a year, or after
       January 1.

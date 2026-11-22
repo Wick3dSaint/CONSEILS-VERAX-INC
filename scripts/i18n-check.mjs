@@ -13,7 +13,7 @@ import fr from '../lib/content/fr.js';
 import { PENDING } from '../lib/content/pending.js';
 
 // Values that must be identical in both languages (not words).
-const STRUCTURAL = new Set(['id', 'icon', 'href', 'part', 'pairs', 'numeral', 'titleLang', 'word', 'serviceIds']);
+const STRUCTURAL = new Set(['id', 'icon', 'href', 'part', 'pairs', 'numeral', 'titleLang', 'word', 'serviceIds', 'serviceId']);
 const STRUCTURAL_PATHS = new Set(['site.email', 'site.phone']);
 // Rich text (string / { em } parts) may legitimately differ in length between languages.
 const RICH_TEXT = new Set(['etymology']);

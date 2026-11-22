@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { BOOKING } from '@/lib/booking/config';
+import { longDateFormat } from '@/lib/dates';
 
 const fill = (template, values) => template.replace(/\{(\w+)\}/g, (_, k) => values[k] ?? '');
 
@@ -49,7 +50,7 @@ export default function CancelBooking({ copy, locale, keepHref, bookHref }) {
 
   const when = start
     ? fill(copy.details, {
-        date: new Intl.DateTimeFormat(locale, { timeZone: BOOKING.timeZone, weekday: 'long', day: 'numeric', month: 'long' }).format(new Date(start)),
+        date: longDateFormat(locale, { timeZone: BOOKING.timeZone, weekday: 'long', day: 'numeric', month: 'long' }).format(new Date(start)),
         time: new Intl.DateTimeFormat(locale, { timeZone: BOOKING.timeZone, hour: 'numeric', minute: '2-digit' }).format(new Date(start)),
       })
     : '';

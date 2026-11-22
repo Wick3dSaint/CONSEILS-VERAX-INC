@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { isQuebecIp } from './lib/geo/quebec';
+import { internalPath, localePath } from './lib/routes';
 
 // Keep in sync with lib/i18n.js (kept separate so the content files stay out of this bundle).
 const LOCALES = ['fr', 'en'];
@@ -44,7 +45,9 @@ export function proxy(request) {
   if (LOCALES.some((l) => pathname === `/${l}` || pathname.startsWith(`/${l}/`))) return;
 
   const url = request.nextUrl.clone();
-  url.pathname = `/${chooseLocale(request)}${pathname === '/' ? '' : pathname}`;
+  const locale = chooseLocale(request);
+  // Accepts English or French page names (/about, /a-propos) and sends each to the chosen language's address.
+  url.pathname = localePath(locale, internalPath('fr', pathname));
   const response = NextResponse.redirect(url, 307);
   // The answer depends on who is asking: never let a cache serve it to someone else.
   response.headers.set('Cache-Control', 'private, no-store');

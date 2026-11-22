@@ -22,7 +22,6 @@ const UP = [
   '.band .h2',
   '.section-intro',
   '.section-link',
-  '.service-tile',
   '.card--scroll',
   '.tile',
   '.client-card',
@@ -30,6 +29,8 @@ const UP = [
   '.side-card',
   '.step',
   '.contact-form',
+  '.faq',
+  '.tax-date',
   '.about-person',
   '.about-story',
 ];

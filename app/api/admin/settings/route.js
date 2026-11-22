@@ -1,3 +1,4 @@
+import { revalidatePath } from 'next/cache';
 import { requireAdmin } from '@/lib/admin/auth';
 import { listBookings } from '@/lib/booking/db';
 import { candidateSlots } from '@/lib/booking/slots';
@@ -24,6 +25,8 @@ export async function PUT(request) {
 
   try {
     const saved = await saveSettings(settings);
+    // Rebuild every public page with the new settings now, instead of within the minute.
+    revalidatePath('/', 'layout');
     // Existing bookings are never changed automatically: list any that fall outside the new hours.
     let outside = [];
     try {
