@@ -533,12 +533,13 @@ section[id],
   margin: 0;
 }
 
-.footer-attribution {
-  flex-basis: 100%;
+.footer-credit a {
+  color: inherit;
+  text-decoration: none;
 }
 
-.footer-attribution a {
-  color: var(--muted);
+.footer-credit a:hover {
+  text-decoration: underline;
 }
 
 /* --------------------------------------------------------------------------
@@ -802,11 +803,20 @@ section[id],
   transform-origin: center;
 }
 
-.level--large .level__bubble {
+/* The level waits, bubble to one side, until it scrolls into view (data-play is set by ScrollReveal). */
+.js-reveal .level--large:not([data-play]) .level__bubble {
+  transform: translateX(-140px);
+}
+
+.js-reveal .level--small:not([data-play]) .level__bubble {
+  transform: translateX(-62px);
+}
+
+.level--large[data-play] .level__bubble {
   animation: level-settle-large 5s ease-in-out 0.5s 1 both;
 }
 
-.level--small .level__bubble {
+.level--small[data-play] .level__bubble {
   animation: level-settle-small 5s ease-in-out 0.5s 1 both;
 }
 
@@ -1695,7 +1705,32 @@ section[id],
    Reduced motion: no level swing, no fade-up, no hover scaling.
    -------------------------------------------------------------------------- */
 
+/* --------------------------------------------------------------------------
+   Scroll reveal (ScrollReveal.js): blocks fade/slide in the first time they scroll into view.
+   -------------------------------------------------------------------------- */
+
+.js-reveal [data-reveal='up']:not([data-revealed]) {
+  opacity: 0;
+  transform: translateY(28px);
+}
+
+.js-reveal [data-reveal='scale']:not([data-revealed]) {
+  opacity: 0;
+  transform: translateY(20px) scale(0.97);
+}
+
+.js-reveal [data-reveal][data-revealed='in'] {
+  transition:
+    opacity 0.7s var(--ease-out) var(--reveal-delay, 0ms),
+    transform 0.8s var(--ease-out) var(--reveal-delay, 0ms);
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .js-reveal [data-reveal]:not([data-revealed]) {
+    opacity: 1;
+    transform: none;
+  }
+
   .fade-up,
   .level__bubble,
   .level--large .level__bubble,
@@ -2383,4 +2418,83 @@ button.calendar__day[aria-pressed='true'] {
   display: inline-block;
   min-height: 24px;
   padding: 3px 0;
+}
+
+/* Contact page: quick links to the booking and message sections. */
+.contact-jump {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.booking-layout--inline {
+  margin: 0;
+  padding: 0;
+}
+
+/* --------------------------------------------------------------------------
+   About page
+   -------------------------------------------------------------------------- */
+
+.about-story .h2 {
+  margin-bottom: 20px;
+}
+
+.about-story__text {
+  max-width: 680px;
+  margin: 0 0 14px;
+  color: var(--text-2);
+  font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
+  line-height: 1.55;
+}
+
+.about-team {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.about-person {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 24px;
+  padding: clamp(24px, 4vw, 36px);
+  border-radius: var(--r-card);
+  background: var(--paper);
+}
+
+.about-person__photo {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: var(--black);
+}
+
+.about-person__name {
+  margin: 0 0 4px;
+  font-size: clamp(1.4rem, 2.4vw, 1.75rem);
+  letter-spacing: -0.03em;
+}
+
+.about-person__role {
+  margin: 0 0 12px;
+  color: var(--green);
+  font-weight: 600;
+}
+
+.about-person__bio {
+  max-width: 520px;
+  margin: 0;
+  color: var(--text-2);
+  line-height: 1.55;
 }

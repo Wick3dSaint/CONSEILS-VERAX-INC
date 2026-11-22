@@ -2,6 +2,7 @@ import { Inter } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import ScrollReveal from '@/components/ScrollReveal';
 import { SITE_URL, getContent, hasLocale } from '@/lib/i18n';
 import '../globals.css';
 
@@ -53,6 +54,7 @@ export default async function RootLayout({ children, params }) {
           {children}
         </main>
         <Footer dict={dict} lang={lang} />
+        <ScrollReveal />
       </body>
     </html>
   );

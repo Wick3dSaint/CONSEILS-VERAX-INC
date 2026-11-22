@@ -300,11 +300,15 @@ export default function BookingWidget({ copy, lang, locale, timeZone, homeHref }
                           type="button"
                           className="calendar__day"
                           aria-pressed={day === date}
-                          aria-label={`${label}, ${copy.available}`}
                           onClick={() => chooseDay(date)}
                         >
-                          {n}
-                          {n === 1 && <span className="calendar__month">{fmt.shortMonth.format(d)}</span>}
+                          <span aria-hidden="true">{n}</span>
+                          {n === 1 && (
+                            <span className="calendar__month" aria-hidden="true">
+                              {fmt.shortMonth.format(d)}
+                            </span>
+                          )}
+                          <span className="sr-only">{`${label}, ${copy.available}`}</span>
                         </button>
                       ) : (
                         <span className="calendar__day calendar__day--off" aria-hidden="true">

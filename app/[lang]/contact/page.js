@@ -1,7 +1,9 @@
 import { getContent, localePath, pageMetadata } from '@/lib/i18n';
 import ContactForm from '@/components/ContactForm';
 import { EmailLink, PhoneLink } from '@/components/ContactDetails';
-import { MoreLink } from '@/components/Text';
+import BookingWidget from '@/components/BookingWidget';
+import { Headline, MoreLink } from '@/components/Text';
+import { BOOKING } from '@/lib/booking/config';
 
 // Reads the admin portal's settings (services on/off, contact details) on every request.
 export const dynamic = 'force-dynamic';
@@ -15,7 +17,7 @@ export async function generateMetadata({ params }) {
 export default async function ContactPage({ params }) {
   const { lang } = await params;
   const dict = await getContent(lang);
-  const { contactPage, services, site } = dict;
+  const { contactPage, bookingPage, services, site } = dict;
   const lp = (path) => localePath(lang, path);
   const { hero, form, sidebar } = contactPage;
   // The five services plus "Not sure yet". `id` is what the form sends, and matches
@@ -35,13 +37,42 @@ export default async function ContactPage({ params }) {
             {hero.title}
           </h1>
           <p className="hero__lead">{hero.lead}</p>
-          <p className="hero__link">
-            <MoreLink href={lp(hero.bookLink.href)}>{hero.bookLink.label}</MoreLink>
-          </p>
+          <ul className="contact-jump" aria-label={hero.eyebrow}>
+            <li>
+              <a href="#book" className="pill pill--green">
+                {hero.jump.book}
+              </a>
+            </li>
+            <li>
+              <a href="#message" className="pill pill--outline">
+                {hero.jump.message}
+              </a>
+            </li>
+          </ul>
         </div>
       </section>
 
-      <section className="section section--tight" aria-label={form.label}>
+      {/* 2. Book a consultation (same calendar as the booking page) */}
+      <section id="book" className="section section--tight" aria-labelledby="book-heading">
+        <div className="container">
+          <Headline id="book-heading" title={contactPage.bookingSection.title} />
+          <div className="booking-layout booking-layout--inline">
+            <BookingWidget
+              copy={bookingPage}
+              lang={lang}
+              locale={site.locale}
+              timeZone={BOOKING.timeZone}
+              homeHref={lp(bookingPage.success.home.href)}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* 3. Send a message */}
+      <section id="message" className="section" aria-labelledby="message-heading">
+        <div className="container">
+          <Headline id="message-heading" title={contactPage.messageSection.title} />
+        </div>
         <div className="container contact-layout">
           {/* 2–3. Form */}
           <div className="contact-layout__form">

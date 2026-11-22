@@ -56,14 +56,13 @@ export default function Footer({ dict, lang }) {
         <div className="footer-bottom">
           <p>
             © {year} {site.legalName} {footer.rights}
+            {/* Link back required by the DB-IP Lite license (CC BY 4.0); the data picks French for Québec visitors. */}
+            <span className="footer-credit">
+              {' · '}
+              <a href="https://db-ip.com">{footer.geoAttribution}</a>
+            </span>
           </p>
           <p>{site.signoff}</p>
-          {/* Attribution required by the DB-IP Lite license (CC BY 4.0), used for language selection. */}
-          <p className="footer-attribution">
-            <a href="https://db-ip.com" lang="en">
-              {footer.geoAttribution}
-            </a>
-          </p>
         </div>
       </div>
     </footer>

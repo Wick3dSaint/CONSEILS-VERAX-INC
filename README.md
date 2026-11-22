@@ -109,10 +109,17 @@ engines, English only).
   `[[ServiceList]]` and `[[Count]]` are filled in from the settings, and `{ one: …, other: … }` picks the
   singular or plural sentence (`buildContent` in `lib/i18n.js`).
 
+## About page (preliminary)
+
+`/fr/about` and `/en/about` (content: `aboutPage` in `lib/content/en.js` and `fr.js`). It has placeholders in
+[BRACKETS] for your story, name, title, professional designation and bio. While `aboutPage.draft` is `true`,
+the page is kept out of the menu and search engines; once the placeholders are filled, set it to `false` and
+add an About link to the navigation.
+
 ## Online booking
 
-Visitors book a free 30-minute first consultation at `/fr/book` or `/en/book`. Every "Book a consultation"
-button points there.
+Visitors book a free 30-minute first consultation at `/fr/book` or `/en/book`, or directly on the Contact
+page (same calendar). Every "Book a consultation" button points to the booking page.
 
 - **Availability** is edited in the admin portal (Availability tab): start times, days, notice, how far ahead,
   closed days. Defaults (10:00, 10:30, 16:00, 16:30, Monday to Friday, from tomorrow, 4 weeks) are in
@@ -225,9 +232,11 @@ log and nobody is notified.
   3:1).
 - **Radii:** panels 28px, cards 22px, inner boxes 20px, pills 980px. The content column is 1040px wide
   with 22px side padding.
-- **Motion:** the only motion is the spirit-level animation (runs once on page load: 5s, `ease-in-out`,
-  0.5s delay), one fade-up entrance per hero, and gentle card scaling on hover. All of it is turned off
-  when the visitor's system asks for reduced motion.
+- **Motion:** content blocks (headings, cards, tiles, panels) fade and slide in the first time they scroll into
+  view, and the spirit level only plays once at least half of it is on screen (`components/ScrollReveal.js`;
+  blocks are chosen by selector there, so pages need no extra markup). Heroes fade in on load; cards scale
+  gently on hover. Whatever is on screen when a page loads shows immediately. With reduced motion requested,
+  or without JavaScript, nothing moves and everything is visible.
 - **Accessibility:** a skip link, semantic landmarks, `aria-current` on the active navigation link, visible
   focus rings, labelled SVGs, form errors linked to their fields with `aria-describedby`, and focus moved
   to the first invalid field. Text meets 4.5:1 contrast.
